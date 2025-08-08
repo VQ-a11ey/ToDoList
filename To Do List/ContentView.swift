@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showNewTask = true
     @Query var toDos : [ToDoItem]
+    @Environment(\.modelContext) var modelContext
     var body: some View {
         
         VStack {
@@ -24,30 +25,46 @@ struct ContentView: View {
             Spacer()
             List {
                 ForEach(toDos){ ToDoItem in
-                    Text(ToDoItem.title)
+                    if ToDoItem.isImportant {
+                        Text("‼"+ToDoItem.title)
+                    }else{
+                        Text(ToDoItem.title)
+                    }
+                    
                 }
+                .onDelete(perform: deleteToDo)
             }
+            .listStyle(.plain)
             Button{
                 withAnimation{
                     showNewTask = true
-                } }label: {
+                }
+            }
+            label: {
                 Text("+")
                     .font(.largeTitle)
                     .fontWeight(.semibold)
-                }
-            if showNewTask {
-                NewToDoView()
             }
+            if showNewTask {
+                NewToDoView(showNewTask: $showNewTask, toDoItem: ToDoItem(title: "", isImportant: false))
+            }
+        
+        
             
            
-            
+                
             } //vstack
        
         }
         
-        
-    } //endstruct
+    func deleteToDo(at offsets: IndexSet) {
+        for offset in offsets {
+            let toDoItem = toDos[offset]
+            modelContext.delete(toDoItem)
+        }
+    }    } //endstruct
     #Preview {
         ContentView()
+            .modelContainer(for: ToDoItem.self, inMemory: true)
     }
 

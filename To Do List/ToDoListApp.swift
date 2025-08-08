@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 @main
-struct To_Do_ListApp: App {
+struct ToDoListApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
