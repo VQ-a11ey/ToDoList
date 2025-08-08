@@ -5,9 +5,11 @@
 //  Created by Scholar on 8/8/25.
 //
 
+import SwiftData
 import SwiftUI
 struct ContentView: View {
     @State private var showNewTask = true
+    @Query var toDos : [ToDoItem]
     var body: some View {
         
         VStack {
@@ -20,6 +22,11 @@ struct ContentView: View {
             } //hstack
             .padding()
             Spacer()
+            List {
+                ForEach(toDos){ ToDoItem in
+                    Text(ToDoItem.title)
+                }
+            }
             Button{
                 withAnimation{
                     showNewTask = true
@@ -31,7 +38,11 @@ struct ContentView: View {
             if showNewTask {
                 NewToDoView()
             }
+            
+           
+            
             } //vstack
+       
         }
         
         
